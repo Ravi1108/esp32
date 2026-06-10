@@ -12,9 +12,6 @@ jobs:
       - name: Unzip project
         run: unzip esp32.zip
 
-      - name: Show folders
-        run: ls -la && ls -la esp32_hub || true
-
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -28,15 +25,17 @@ jobs:
           channel: 'stable'
 
       - name: Get packages
-        run: flutter pub get
-        working-directory: ${{ github.workspace }}/esp32_hub
+        run: |
+          cd esp32_hub
+          flutter pub get
 
       - name: Build APK
-        run: flutter build apk --debug
-        working-directory: ${{ github.workspace }}/esp32_hub
+        run: |
+          cd esp32_hub
+          flutter build apk --debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: ESP32-Monitor-APK
-          path: ${{ github.workspace }}/esp32_hub/build/app/outputs/flutter-apk/app-debug.apk
+          path: esp32_hub/build/app/outputs/flutter-apk/app-debug.apk
