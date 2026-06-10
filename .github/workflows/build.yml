@@ -12,6 +12,9 @@ jobs:
       - name: Unzip project
         run: unzip esp32.zip
 
+      - name: Show extracted folders
+        run: ls -la
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -25,10 +28,12 @@ jobs:
           channel: 'stable'
 
       - name: Get packages
-        run: cd esp32_hub && flutter pub get
+        run: flutter pub get
+        working-directory: esp32_hub
 
       - name: Build APK
-        run: cd esp32_hub && flutter build apk --debug
+        run: flutter build apk --debug
+        working-directory: esp32_hub
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
