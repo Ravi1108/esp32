@@ -12,6 +12,9 @@ jobs:
       - name: Unzip project
         run: unzip esp32.zip
 
+      - name: Find flutter project
+        run: find . -name "pubspec.yaml" | head -5
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -24,18 +27,16 @@ jobs:
           flutter-version: '3.44.1'
           channel: 'stable'
 
-      - name: Get packages
+      - name: Get packages and Build
         run: |
-          cd esp32_hub
+          PROJECT=$(find . -name "pubspec.yaml" | head -1 | xargs dirname)
+          echo "Found project at: $PROJECT"
+          cd $PROJECT
           flutter pub get
-
-      - name: Build APK
-        run: |
-          cd esp32_hub
           flutter build apk --debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: ESP32-Monitor-APK
-          path: esp32_hub/build/app/outputs/flutter-apk/app-debug.apk
+          path: "**/app-debug.apk"
